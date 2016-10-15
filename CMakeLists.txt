@@ -6,6 +6,10 @@ cmake_minimum_required(VERSION 2.8.3)
 
 project(librealsense)
 
+set(CMAKE_C_FLAGS "-std=c11 -D_BSD_SOURCE -fPIC -pedantic -DRS_USE_$(LIBUVC)_BACKEND $(LIBUSB_FLAGS)")
+set(CMAKE_CXX_FLAGS "-std=c++11 -fPIC -pedantic -Ofast -Wno-missing-field-initializers")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-switch -Wno-multichar -DRS_USE_$(LIBUVC)_BACKEND $(LIBUSB_FLAGS)")
+
 include(ExternalProject)
 
 find_package(catkin REQUIRED)
@@ -18,7 +22,7 @@ externalproject_add(${PROJECT_NAME}_extern
   CONFIGURE_COMMAND echo "No Configuration Step"
 
   BUILD_IN_SOURCE 1
-  BUILD_COMMAND $(MAKE) lib/${PROJECT_NAME}.so
+  BUILD_COMMAND make all BACKEND=LIBUVC lib/${PROJECT_NAME}.so
 
   INSTALL_DIR ${CATKIN_DEVEL_PREFIX}
   INSTALL_COMMAND cp <SOURCE_DIR>/lib/${PROJECT_NAME}.so <INSTALL_DIR>/lib/ COMMAND cp -r <SOURCE_DIR>/include/${PROJECT_NAME} <INSTALL_DIR>/include/
